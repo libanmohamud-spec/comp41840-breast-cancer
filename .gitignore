@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+dist/
+build/
+.venv/
+venv/
+.env
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Data (see README — do not commit raw Kaggle data)
+data/raw/
+
+# Results / large artifacts (uncomment if you prefer not to track)
+# results/
+
+# Report PDF (optional local build)
+report/*.pdf
+
+# OS / IDE
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
