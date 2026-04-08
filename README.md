@@ -100,7 +100,7 @@ comp41840-breast-cancer/
 ## Installation
 
 ```bash
-git clone <repo-url>
+git clone https://github.com/libanmohamud-spec/comp41840-breast-cancer.git
 cd comp41840-breast-cancer
 pip install -r requirements.txt
 ```
