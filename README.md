@@ -75,7 +75,7 @@ comp41840-breast-cancer/
 |---|------|-------|--------|
 | 1 | Dataset Understanding & EDA | Sergio | ⬜ |
 | 2 | Imaging Model (MONAI CNN) | Thomas | ⬜ |
-| 3 | Tabular Model (XGBoost) | Liban | ⬜ |
+| 3 | Tabular Model (XGBoost) | Liban | 🟨 Started (21 Apr) |
 | 4 | Fusion Model (Late Fusion) | Liban + Thomas | ⬜ |
 | 5 | Explainability (Grad-CAM + SHAP) | Sergio | ⬜ |
 | 6 | Research Questions | All | ⬜ |
@@ -87,12 +87,10 @@ comp41840-breast-cancer/
 
 | Date | Target |
 |------|--------|
-| 11 Apr | Repo set up · Data downloaded · EDA drafted |
-| 15 Apr | Imaging model trained & evaluated |
-| 17 Apr | Tabular model done · Models compared |
-| 19 Apr | Fusion model · Explainability complete |
-| 21 Apr | Report draft circulated for review |
-| 23 Apr | Final report + individual statements ready |
+| 21 Apr (Tue) | Project sprint starts · data setup check · Task 3 in progress |
+| 22 Apr (Wed) | Task 3 complete (metrics + figures + saved outputs) |
+| 23 Apr (Thu) | Task 4 fusion complete · model comparison written |
+| 24 Apr (Fri, before 17:00) | Final report polish · individual statements · submission |
 | **24 Apr 17:00** | **Submission** |
 
 ---
@@ -106,6 +104,21 @@ pip install -r requirements.txt
 ```
 
 Requires Python 3.10+. GPU recommended for Task 2 (imaging model).
+
+---
+
+## Run Task 3 (Tabular)
+
+1. Ensure `data/clinical.csv` exists.
+2. Open and run `notebooks/03_tabular_model.ipynb` end-to-end.
+3. Expected outputs:
+   - `results/metrics.json` with `tabular` metrics
+   - `results/tabular_classification_report.txt`
+   - `results/tabular_test_probs.npy`
+   - `results/tabular_test_labels.npy`
+   - `results/figures/tabular_confusion_matrix.png`
+   - `results/figures/tabular_roc.png`
+   - `results/figures/tabular_feature_importance.png`
 
 ---
 
