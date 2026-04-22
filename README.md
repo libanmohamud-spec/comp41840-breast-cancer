@@ -23,20 +23,16 @@ The system combines ultrasound image classification (MONAI CNN) with clinical/ta
    kaggle datasets download -d ajithdari/multi-modal-breast-cancer-dataset
    unzip multi-modal-breast-cancer-dataset.zip -d data/raw/
    ```
-2. Expected structure after extraction:
+2. Expected structure after extraction (Kaggle zip often nests one extra `dataset/` folder):
    ```
    data/raw/
-   ├── benign/
-   │   ├── images/
-   │   └── masks/
-   ├── malignant/
-   │   ├── images/
-   │   └── masks/
-   └── normal/
-       ├── images/
-       └── masks/
+   ├── dataset/
+   │   ├── dataset1/…/benign|malignant|normal/images/
+   │   ├── dataset2/patient_history_dataset.csv
+   │   └── dataset3/molecular_biomarker_dataset.csv
+   └── …
    ```
-3. A `data/clinical.csv` tabular file should also be present in the archive.
+3. **Tabular data:** When `dataset2` + `dataset3` are present, Tasks 3–4 use the merged Kaggle tables and the **same patient-level train/val/test split** as Task 2 (see `src/patient_split.py`). Otherwise place a standalone `data/clinical.csv` for the legacy path in `03_tabular_model.ipynb`.
 
 ---
 
@@ -55,11 +51,7 @@ comp41840-breast-cancer/
 │   ├── 04_fusion_model.ipynb   # Task 4 — Late fusion (Liban + Thomas)
 │   └── 05_explainability.ipynb # Task 5 — Grad-CAM + SHAP (Sergio)
 ├── src/
-│   ├── dataset.py              # Shared data loaders
-│   ├── imaging.py              # CNN model definition & training
-│   ├── tabular.py              # XGBoost pipeline
-│   ├── fusion.py               # Late fusion logic
-│   └── explain.py              # Grad-CAM + SHAP utilities
+│   └── patient_split.py        # Shared patient alignment + stratified split (Tasks 2–4)
 ├── results/
 │   ├── figures/                # Plots, confusion matrices, Grad-CAM overlays
 │   └── metrics.json            # Stored evaluation metrics per model
@@ -73,25 +65,26 @@ comp41840-breast-cancer/
 
 | # | Task | Owner | Status |
 |---|------|-------|--------|
-| 1 | Dataset Understanding & EDA | Sergio | ⬜ |
-| 2 | Imaging Model (MONAI CNN) | Thomas | ⬜ |
-| 3 | Tabular Model (XGBoost) | Liban | 🟨 Started (21 Apr) |
-| 4 | Fusion Model (Late Fusion) | Liban + Thomas | ⬜ |
-| 5 | Explainability (Grad-CAM + SHAP) | Sergio | ⬜ |
-| 6 | Research Questions | All | ⬜ |
+| 1 | Dataset Understanding & EDA | Sergio | ✅ Complete |
+| 2 | Imaging Model (MONAI CNN) | Thomas | ✅ Complete |
+| 3 | Tabular Model (XGBoost) | Liban | ✅ Complete |
+| 4 | Fusion Model (Late Fusion) | Liban + Thomas | ✅ Complete |
+| 5 | Explainability (Grad-CAM + SHAP) | Sergio | ✅ Complete |
+| 6 | Research Questions | All | ✅ Complete |
 | 7 | Optional: MedGemma comparison | Stretch | ⬜ |
 
 ---
 
 ## Milestones
 
-| Date | Target |
-|------|--------|
-| 21 Apr (Tue) | Project sprint starts · data setup check · Task 3 in progress |
-| 22 Apr (Wed) | Task 3 complete (metrics + figures + saved outputs) |
-| 23 Apr (Thu) | Task 4 fusion complete · model comparison written |
-| 24 Apr (Fri, before 17:00) | Final report polish · individual statements · submission |
-| **24 Apr 17:00** | **Submission** |
+| Date | Target | Status |
+|------|--------|--------|
+| 21 Apr (Tue) | Sprint start · Kaggle data extract · shared split (`patient_split.py`) · Task 3 underway | ✅ |
+| 22 Apr (Wed) | Task 3 complete · metrics + figures + `tabular_xgb_model.json` / preprocess for fusion & SHAP | ✅ |
+| 23 Apr (Thu) | Task 2 imaging · Task 4 fusion · `model_comparison.csv` · aligned test exports | ✅ |
+| 23–24 Apr | Task 1 EDA · Task 5 explainability (Grad-CAM + SHAP) · Task 6 research answers in README | ✅ |
+| 24 Apr (Fri, before 17:00) | Final `report/report.pdf` · per-member statements · repo tidy · optional Task 7 only if time | ⬜ |
+| **24 Apr 17:00** | **Brightspace / module submission** | ⬜ |
 
 ---
 
@@ -109,16 +102,36 @@ Requires Python 3.10+. GPU recommended for Task 2 (imaging model).
 
 ## Run Task 3 (Tabular)
 
-1. Ensure `data/clinical.csv` exists.
+1. **Preferred (fusion-aligned):** extract Kaggle data so `data/raw/dataset/dataset2/patient_history_dataset.csv` and `dataset3/molecular_biomarker_dataset.csv` exist.  
+   **Fallback:** ensure `data/clinical.csv` exists (standalone survival-style CSV).
 2. Open and run `notebooks/03_tabular_model.ipynb` end-to-end.
 3. Expected outputs:
    - `results/metrics.json` with `tabular` metrics
+   - `results/patient_split.json` (when using Kaggle multi-modal layout)
    - `results/tabular_classification_report.txt`
    - `results/tabular_test_probs.npy`
    - `results/tabular_test_labels.npy`
+   - `results/tabular_xgb_model.json` and `results/tabular_preprocess.joblib` (for Task 5 SHAP)
+   - `results/test_patient_ids.npy` (aligned mode; same order as Task 2 test exports)
    - `results/figures/tabular_confusion_matrix.png`
    - `results/figures/tabular_roc.png`
    - `results/figures/tabular_feature_importance.png`
+
+## Run Task 2 (Imaging) and Task 4 (Fusion)
+
+1. With the same Kaggle extraction as above, run `notebooks/02_imaging_model.ipynb` (uses `src/patient_split.py` for the **same stratified split** as Task 3 when multi-modal files are present).
+2. Run `notebooks/04_fusion_model.ipynb` to combine `imaging_test_probs.npy` and `tabular_test_probs.npy`, update `results/metrics.json` with `fusion`, and write `results/model_comparison.csv`.
+
+## Run Task 1 (EDA)
+
+Run `notebooks/01_eda.ipynb` after extracting data. It writes figures under `results/figures/` (class distribution, samples, mask overlay when masks exist, tabular summaries).
+
+## Run Task 5 (Explainability)
+
+1. Run Tasks **2** and **3** first so `results/best_imaging_model.pt`, `tabular_xgb_model.json`, and `tabular_preprocess.joblib` exist.
+2. Run `notebooks/05_explainability.ipynb`.  
+   On some Windows setups, SHAP may pull optional Hugging Face TensorFlow stubs; if `TreeExplainer` fails, install `tf-keras` (`pip install tf-keras`) and retry.
+3. Outputs include `gradcam_malignant.png`, `gradcam_benign.png`, `shap_beeswarm.png`, `shap_bar.png`, `shap_waterfall.png`, `shap_dependence.png`.
 
 ---
 
@@ -137,6 +150,22 @@ Requires Python 3.10+. GPU recommended for Task 2 (imaging model).
 2. How well do clinical/genomic variables perform on their own?
 3. Does combining image and tabular data in a fusion model improve predictive performance?
 4. Do Grad-CAM and SHAP provide clinically plausible explanations?
+
+### Findings (aligned test set; see `results/metrics.json` and `results/model_comparison.csv`)
+
+Numbers below come from the last full pipeline run saved in the repo. **Re-run notebooks 02–04** after longer imaging training or GPU runs to refresh metrics; the qualitative conclusions should be checked the same way.
+
+**1. Ultrasound alone**  
+Yes, to a useful but limited extent. The MONAI DenseNet121 imaging model reached **test AUC 0.77** and **F1 0.63** on the shared patient-level test split, so images carry real signal but are weaker than tabular scores in this setup (short CPU training in our default notebook profile will underestimate imaging performance).
+
+**2. Clinical / genomic tabular alone**  
+Stronger than imaging alone on the same split: **test AUC 0.97** and **F1 0.85** for XGBoost on merged patient history + molecular features. Tabular data is highly predictive for benign vs malignant in this cohort.
+
+**3. Fusion vs single modality**  
+Late fusion **improves ranking (AUC)** over imaging alone and slightly over tabular alone in our saved run: best fusion (**weighted**, AUC **0.971** vs tabular **0.966**, imaging **0.766**). **F1** is similar between tabular and fusion here (**0.866**), so the gain is clearest in discrimination (AUC) rather than balanced F1. Interpretation: combining modalities helps most when image quality or label noise limits the CNN; always validate on held-out data and calibration for deployment.
+
+**4. Grad-CAM and SHAP plausibility**  
+They give **auditable, feature-level rationales**, not a clinical diagnosis. **Grad-CAM** (`results/figures/gradcam_*.png`) highlights where the CNN focuses; reviewers should check whether saliency aligns with lesion margins / texture versus artefacts (shadowing, gain settings). **SHAP** (`results/figures/shap_*.png`) ranks which engineered variables drive the XGBoost malignant score; plausibility means comparing top features to oncologic intuition and known data leakage (e.g. surgery type, stage proxies). Formal clinical plausibility would require radiologist/pathologist review and external validation.
 
 ---
 

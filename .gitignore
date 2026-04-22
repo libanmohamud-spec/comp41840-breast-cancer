@@ -14,6 +14,8 @@ venv/
 
 # Data (see README — do not commit raw Kaggle data)
 data/raw/
+data/clinical.csv
+data/*.zip
 
 # Results / large artifacts (uncomment if you prefer not to track)
 # results/
