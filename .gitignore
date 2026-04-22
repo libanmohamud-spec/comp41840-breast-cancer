@@ -23,6 +23,10 @@ data/*.zip
 # Report PDF (optional local build)
 report/*.pdf
 
+# Final submission binaries (keep repo lean; README in outputs/ is tracked)
+outputs/*.pdf
+outputs/*.docx
+
 # OS / IDE
 .DS_Store
 Thumbs.db
