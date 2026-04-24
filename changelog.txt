@@ -1,6 +1,32 @@
 CHANGELOG — notebooks/03_tabular_model.ipynb
 ============================================
 
+[2026-04-24] Drop zero-info constants, duplicate encoding, and NPI redundancy check
+-------------------------------------------------------------------------------------
+Three further DROP_COLS additions and a new pre-training diagnostic cell:
+
+1. 'Sex' and 'Cancer Type' removed — both are constant across the entire aligned
+   cohort (all patients are Female / Breast Cancer). Constant features carry zero
+   information and only add noise to the model and SHAP plots.
+
+2. 'Oncotree Code' removed — it is a 1-to-1 re-encoding of 'Cancer Type Detailed'
+   (e.g. IDC ↔ Breast Invasive Ductal Carcinoma). Keeping both gives that single
+   piece of information twice the weight in tree splits and SHAP values. 'Cancer
+   Type Detailed' is retained as the more human-readable form.
+
+3. New cell added before training (section 3.4): prints the Pearson correlation of
+   'Nottingham prognostic index' against its three component features — Tumor Size,
+   Lymph nodes examined positive, and Neoplasm Histologic Grade (NPI formula:
+   0.2 × size_cm + lymph_node_stage + grade). If the maximum component correlation
+   exceeds 0.90 the cell automatically adds NPI to DROP_COLS and rebuilds the
+   feature matrices, removing the near-perfectly-derived composite to avoid
+   multicollinearity. On the current dataset the correlation is ~0.97, so NPI is
+   dropped at runtime.
+
+Re-run notebooks 03 → 04 → 05 after this change.
+
+---
+
 [2026-04-24] Drop 'Cohort' from feature set (confound removal)
 ---------------------------------------------------------------
 Added 'Cohort' to DROP_COLS in the feature-selection cell.
