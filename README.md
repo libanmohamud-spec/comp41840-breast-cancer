@@ -33,7 +33,7 @@ The system combines ultrasound image classification (MONAI CNN) with clinical/ta
    │   └── dataset3/molecular_biomarker_dataset.csv
    └── …
    ```
-3. **Tabular data:** When `dataset2` + `dataset3` are present, Tasks 3–4 use the merged Kaggle tables and the **same patient-level train/val/test split** as Task 2 (see `src/patient_split.py`). Otherwise place a standalone `data/clinical.csv` for the legacy path in `03_tabular_model.ipynb`.
+3. **Tabular data:** Tasks 3–4 use the merged Kaggle tables (`dataset2` + `dataset3`) with the **same patient-level train/val/test split** as Task 2 (see `src/patient_split.py`).
 
 ---
 
@@ -117,8 +117,7 @@ Requires Python 3.10+. GPU recommended for Task 2 (imaging model).
 
 ## Run Task 3 (Tabular)
 
-1. **Preferred (fusion-aligned):** extract Kaggle data so `data/raw/dataset/dataset2/patient_history_dataset.csv` and `dataset3/molecular_biomarker_dataset.csv` exist.  
-   **Fallback:** ensure `data/clinical.csv` exists (standalone survival-style CSV).
+1. Extract Kaggle data so `data/raw/dataset/dataset2/patient_history_dataset.csv` and `dataset3/molecular_biomarker_dataset.csv` exist.
 2. Open and run `notebooks/03_tabular_model.ipynb` end-to-end.
 3. Expected outputs:
    - `results/metrics.json` with `tabular` metrics

@@ -24,5 +24,3 @@ data/raw/
     ├── images/
     └── masks/
 ```
-
-A `clinical.csv` file with tabular patient data should also be present — place it at `data/clinical.csv`.

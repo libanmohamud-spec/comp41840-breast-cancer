@@ -1,6 +1,13 @@
 # Data
 *.zip
-raw/
+raw/*
+*.npy
+*.joblib
+*.json
+results/figures/*
+
+# Model
+*.pt
 
 # Python
 __pycache__/
