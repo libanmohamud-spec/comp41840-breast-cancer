@@ -1,6 +1,6 @@
 Model,AUC,F1,Precision,Recall
-Imaging (DenseNet),0.9214,0.7353,0.6944,0.7812
-Tabular (XGBoost),0.9498,0.8169,0.7436,0.9062
-Fusion (Average),0.992,0.9394,0.9118,0.9688
-Fusion (Weighted),0.9934,0.9538,0.9394,0.9688
-Fusion (Stack),0.9924,0.9355,0.9667,0.9062
+Imaging (DenseNet),0.9195,0.7887,0.7179,0.875
+Tabular (XGBoost),0.7301,0.5758,0.5588,0.5938
+Fusion (Average),0.9257,0.8125,0.8125,0.8125
+Fusion (Weighted),0.9342,0.806,0.7714,0.8438
+Fusion (Stack),0.9337,0.7812,0.7812,0.7812

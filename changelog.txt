@@ -1,0 +1,42 @@
+CHANGELOG — notebooks/03_tabular_model.ipynb
+============================================
+
+[2026-04-24] Drop 'Cohort' from feature set (confound removal)
+---------------------------------------------------------------
+Added 'Cohort' to DROP_COLS in the feature-selection cell.
+
+'Cohort' (values 1, 2, 3) is a data-collection batch indicator from the METABRIC
+patient history dataset (dataset2). It encodes which recruitment wave a patient
+belonged to, not any clinical measurement. Because the three cohorts differ in
+class distribution, the XGBoost model learned to exploit cohort membership as a
+strong predictor of malignancy — an artefact confirmed by SHAP analysis (notebook
+05_explainability.ipynb), where 'Cohort' appeared near the top of the mean |SHAP|
+bar chart. Keeping it inflates apparent model performance and produces
+clinically meaningless explanations. Dropping it forces the model to rely on
+actual clinical and molecular features.
+
+Re-run notebooks 03 → 04 → 05 after this change to update saved artefacts
+(tabular_preprocess.joblib, tabular_xgb_model.json) and SHAP figures.
+
+---
+
+[2026-04-21] Drop post-treatment / outcome-proxy columns (leakage fix)
+-----------------------------------------------------------------------
+Moved 'Overall Survival Status', 'Overall Survival (Months)',
+'Relapse Free Status', 'Relapse Free Status (Months)', 'Chemotherapy',
+'Hormone Therapy', 'Radio Therapy', and 'Type of Breast Surgery' into a
+dedicated LEAKAGE_COLS set and excluded them from feature_cols.
+
+These columns are recorded after diagnosis and treatment decisions are made,
+so including them would leak outcome information into the classifier and produce
+unrealistically high metrics that would not generalise to a real screening
+scenario.
+
+---
+
+[2026-04-20] Removed usage of clinical_history.csv
+---------------------------------------------------
+Replaced the earlier reliance on a local clinical_history.csv with the
+Kaggle multi-modal dataset sources (dataset2/patient_history_dataset.csv and
+dataset3/molecular_biomarker_dataset.csv) to ensure reproducibility from the
+public dataset alone.

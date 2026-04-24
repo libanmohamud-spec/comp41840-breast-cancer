@@ -1,21 +1,21 @@
 {
   "tabular": {
-    "auc": 0.9498,
-    "precision": 0.7436,
-    "recall": 0.9062,
-    "f1": 0.8169
+    "auc": 0.7301,
+    "precision": 0.5588,
+    "recall": 0.5938,
+    "f1": 0.5758
   },
   "imaging": {
-    "auc": 0.9214,
-    "precision": 0.6944,
-    "recall": 0.7812,
-    "f1": 0.7353
+    "auc": 0.9195,
+    "precision": 0.7179,
+    "recall": 0.875,
+    "f1": 0.7887
   },
   "fusion": {
     "strategy": "weighted",
-    "auc": 0.9934,
-    "f1": 0.9538,
-    "precision": 0.9394,
-    "recall": 0.9688
+    "auc": 0.9342,
+    "f1": 0.806,
+    "precision": 0.7714,
+    "recall": 0.8438
   }
 }
