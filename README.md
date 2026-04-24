@@ -1,9 +1,9 @@
 # COMP41840 — AI for Health: Multi-Modal Breast Cancer Classification
 
-**Team:** Liban · Thomas · Sergio *(add full surnames for Thomas and Sergio on the title page and anywhere official names are required)*  
+**Team:** Liban · Thomas · Sergio Cordero *(add full surnames for Thomas and Sergio on the title page and anywhere official names are required)*  
 **Module:** COMP41840 AI for Health — Dr. Aonghus Lawlor  
 **Deadline:** 24 April 2026 @ 17:00  
-**Repository:** https://github.com/libanmohamud-spec/comp41840-breast-cancer *(confirm this is the URL you submit)*  
+**Repository:** https://github.com/libanmohamud-spec/comp41840-breast-cancer 
 
 ---
 

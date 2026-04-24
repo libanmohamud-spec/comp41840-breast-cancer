@@ -1,3 +1,7 @@
+# Data
+*.zip
+raw/
+
 # Python
 __pycache__/
 *.py[cod]
@@ -8,6 +12,7 @@ build/
 .venv/
 venv/
 .env
+.python-version
 
 # Jupyter
 .ipynb_checkpoints/
