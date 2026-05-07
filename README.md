@@ -143,7 +143,6 @@ Run `notebooks/01_eda.ipynb` after extracting data. It writes figures under `res
 - One branch per task: `task/01-eda`, `task/02-imaging`, `task/03-tabular`, etc.
 - PRs require **at least one reviewer** before merging to `main`
 - Use **GitHub Issues** to track blockers and decisions
-- Commit regularly — the lecturer checks commit history, PRs, and issue tracking
 
 ---
 
