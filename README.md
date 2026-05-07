@@ -89,17 +89,6 @@ comp41840-breast-cancer/
 | 24 Apr (Fri, before 17:00) | Final `report/report.pdf` · per-member statements · repo tidy · optional Task 7 only if time | ⬜ |
 | **24 Apr 17:00** | **Brightspace / module submission** | ⬜ |
 
----
-
-## Submission checklist (group report + module brief)
-
-- **PDF:** Dr. Lawlor’s brief asks for a PDF submission; treat the Word file as an editable source only.
-- **Patient split sizes (for Table 1 / methods text):** from `results/patient_split.json` on the aligned cohort: **train 452 · validation 97 · test 98** (647 patients with both tabular rows and ultrasound). Replace any rounded **453 / 96** wording with these counts.
-- **Limitations (esp. §9):** if you keep outcome/treatment columns in tabular features, the report should acknowledge possible leakage; if you re-run after dropping `LEAKAGE_COLS` in `03_tabular_model.ipynb`, tighten that section and refresh metrics from `results/metrics.json`.
-- **Optional robustness pass (~1 h):** re-run `03_tabular_model.ipynb` → `02_imaging_model.ipynb` → `04_fusion_model.ipynb` after leakage drops; tune the fusion weight on **validation** probabilities (save val probs from notebooks 02 and 03 if you add that), then update the report with find-and-replace on metrics.
-- **Per-member deliverable:** individual contribution statements (**2–5 pages each**) are separate from the group report; each author writes their own (technical work, notebooks, report role, challenges, team process).
-
-Place final **`COMP41840_group_report.pdf`** (and optional `.docx`) under **`outputs/`** if you want a single hand-in folder alongside the repo; see `outputs/README.md`.
 
 ---
 
