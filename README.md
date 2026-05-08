@@ -155,19 +155,29 @@ Run `notebooks/01_eda.ipynb` after extracting data. It writes figures under `res
 
 ### Findings (aligned test set; see `results/metrics.json` and `results/model_comparison.csv`)
 
-Numbers below come from the last full pipeline run saved in the repo. **Re-run notebooks 02–04** after longer imaging training or GPU runs to refresh metrics; the qualitative conclusions should be checked the same way.
+The final reported numbers come from the corrected leakage-controlled pipeline saved in `results/metrics.json`. Earlier exploratory runs produced much higher tabular performance, but those results were contaminated by post-diagnostic and cohort-confounded variables. The final analysis removes those variables before training.
 
 **1. Ultrasound alone**  
-Yes, to a useful but limited extent. The MONAI DenseNet121 imaging model reached **test AUC 0.77** and **F1 0.63** on the shared patient-level test split, so images carry real signal but are weaker than tabular scores in this setup (short CPU training in our default notebook profile will underestimate imaging performance).
+Yes. The MONAI DenseNet121 ultrasound model reached **test AUC 0.924** and **F1 0.794** on the shared patient-level held-out test split. This makes imaging the strongest single modality in the corrected pipeline and suggests that the ultrasound images contain substantial benign-versus-malignant diagnostic signal.
 
-**2. Clinical / genomic tabular alone**  
-Stronger than imaging alone on the same split: **test AUC 0.97** and **F1 0.85** for XGBoost on merged patient history + molecular features. Tabular data is highly predictive for benign vs malignant in this cohort.
+**2. Clinical / genomic tabular data alone**  
+The corrected XGBoost tabular model reached **test AUC 0.723** and **F1 0.523** after removing post-diagnostic treatment/outcome variables and the cohort confound. This is much lower than the earlier leakage-contaminated tabular result, but it is more clinically defensible because the model no longer relies on variables unavailable at diagnosis time.
 
-**3. Fusion vs single modality**  
-Late fusion **improves ranking (AUC)** over imaging alone and slightly over tabular alone in our saved run: best fusion (**weighted**, AUC **0.971** vs tabular **0.966**, imaging **0.766**). **F1** is similar between tabular and fusion here (**0.866**), so the gain is clearest in discrimination (AUC) rather than balanced F1. Interpretation: combining modalities helps most when image quality or label noise limits the CNN; always validate on held-out data and calibration for deployment.
+**3. Fusion versus single modality**  
+Late fusion produced the best overall test performance, with the weighted fusion variant reaching **AUC 0.939** and **F1 0.824**. This improves modestly over imaging alone, but the gain is small and should be interpreted cautiously because the test set contains only 98 patients. Any fusion weight should ideally be tuned on validation predictions rather than selected using the test set.
 
 **4. Grad-CAM and SHAP plausibility**  
-They give **auditable, feature-level rationales**, not a clinical diagnosis. **Grad-CAM** (`results/figures/gradcam_*.png`) highlights where the CNN focuses; reviewers should check whether saliency aligns with lesion margins / texture versus artefacts (shadowing, gain settings). **SHAP** (`results/figures/shap_*.png`) ranks which engineered variables drive the XGBoost malignant score; plausibility means comparing top features to oncologic intuition and known data leakage (e.g. surgery type, stage proxies). Formal clinical plausibility would require radiologist/pathologist review and external validation.
+Grad-CAM and SHAP are used as auditing tools rather than proof of clinical correctness. Grad-CAM checks whether the CNN focuses on lesion regions or image artefacts such as probe markers and calipers. SHAP shows that, after leakage removal, the tabular model relies on more plausible tumour and molecular features rather than survival, treatment or cohort variables.
+
+Final corrected metrics:
+
+| Model | AUC | F1 | Precision | Recall |
+|---|---:|---:|---:|---:|
+| Imaging DenseNet121 | 0.924 | 0.794 | 0.750 | 0.844 |
+| Tabular XGBoost | 0.723 | 0.523 | 0.515 | 0.531 |
+| Fusion Average | 0.936 | 0.776 | 0.743 | 0.813 |
+| Fusion Weighted | 0.939 | 0.824 | 0.778 | 0.875 |
+| Fusion Stacking | 0.936 | 0.730 | 0.742 | 0.719 |
 
 ---
 
